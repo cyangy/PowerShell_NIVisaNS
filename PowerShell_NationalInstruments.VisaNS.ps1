@@ -18,6 +18,23 @@ new-object [NationalInstruments.VisaNS]::MessageBasedSession
 [System.Reflection.Assembly]::LoadFrom("D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.dll") 
 #Add-Type -Path "D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.Static.dll" #加载出错
 #$LoadNationalInstrumentsVisaNS = Add-Type -Path "D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.dll" # Load the .Net library
- $env:PATH += ";D:\Data\Github\VISA_CLI\lib\" 
+ $env:PATH += ";D:\Data\Github\VISA_CLI\lib\"
+ Clear-Host 
 #dll中命名空间可以从 VisualStudio 对象浏览器中查看、复制
-[NationalInstruments.VisaNS.MessageBasedSession].BaseType
+#[NationalInstruments.VisaNS.MessageBasedSession].BaseType
+#实际使用时直接使用实例，不要使用基类 MessageBasedSession  SerialSession
+#[NationalInstruments.VisaNS.MessageBasedSession] $mbs = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("ASRL1::INSTR")
+[NationalInstruments.VisaNS.SerialSession] $HP34401A_VinDDM = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("ASRL2::INSTR")
+$HP34401A_VinDDM.BaudRate             = 9600  #波特率
+$HP34401A_VinDDM.DataBits             = 8     #数据位
+$HP34401A_VinDDM.StopBits             = [NationalInstruments.VisaNS.StopBitType]10 #停止位 
+$HP34401A_VinDDM.Parity               = [NationalInstruments.VisaNS.Parity]0   #校验     NONE 0  Odd 1  Even 2 Mark 3 Space 4
+$HP34401A_VinDDM.FlowControl          = [NationalInstruments.VisaNS.FlowControlTypes]0 #Flow Control  NONE 0  XON/XOFF 1   //Flow Control  NONE 0  XON/XOFF 1   使用 NI I/O Trace 监视   VISA Test Panel 设置时得到
+$HP34401A_VinDDM.TerminationCharacter = 0x0A #使用0x0A作为终止符
+$HP34401A_VinDDM.ReadTermination      = [NationalInstruments.VisaNS.SerialTerminationMethod]::TerminationCharacter; #读回结束符选择  #结束符选择 None 0   LastBit 1   TerminationCharacter 2   Break 3
+                                         #VI_ATTR_ASRL_END_IN indicates the method used to terminate read operations
+$HP34401A_VinDDM.WriteTermination     = [NationalInstruments.VisaNS.SerialTerminationMethod]::TerminationCharacter #写入结束符选择  #结束符选择 None 0   LastBit 1   TerminationCharacter 2   Break 3
+                                         #VI_ATTR_ASRL_END_OUT indicates the method used to terminate write operations
+#使用Byte[]写入
+$HP34401A_VinDDM.Query([System.Text.Encoding]::GetEncoding("iso-8859-1").GetBytes(("*IDN?`r`n")))
+$HP34401A_VinDDM.Dispose()
