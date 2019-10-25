@@ -41,4 +41,5 @@ $HP34401A_VinDDM.WriteTermination     = [NationalInstruments.VisaNS.SerialTermin
                                          #VI_ATTR_ASRL_END_OUT indicates the method used to terminate write operations
 #使用Byte[]写入
 $HP34401A_VinDDM.Query([System.Text.Encoding]::GetEncoding("iso-8859-1").GetBytes(("*IDN?`r`n")))
+#最后一定要使用 Dispose() 释放串口,否则串口会一直处于锁定状态
 $HP34401A_VinDDM.Dispose()
