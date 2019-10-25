@@ -56,3 +56,11 @@ $mbs.Dispose()
 [NationalInstruments.VisaNS.MessageBasedSession] $mbs = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("TCPIP0::192.168.1.2::inst0::INSTR")
 $mbs.Query("*IDN?")
 $mbs.Dispose()
+##############################################################################################USBRAW示例
+#参考 https://ww3.minicircuits.com/softwaredownload/App%20Note%20-%20VISA%20Control.pdf
+[System.Byte[]]$bytes4write = @(0x66,11, 0xB8)
+[NationalInstruments.VisaNS.UsbRaw] $uraw = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("USB0::0x20CE::0x0011::NI-VISA-60001::RAW")
+$uraw.InterruptInPipe = -1    #Endpoint number of the USB interrupt-in pipe. If the resource does not have an interrupt-in pipe, the initial (and only valid) value is –1. If the resource has at least 1 interrupt-in pipe, the initial value is its interrupt-in pipe with the lowest endpoint number.
+$uraw.BulkInPipe      = 129   #Endpoint number of the USB bulk-in pipe. If the resource does not have a bulk-in pipe, the initial (and only valid) value is –1. If the resource has at least 1 bulk-in pipe, the initial value is its bulk-in pipe with the lowest endpoint number.
+$uraw.Query($bytes4write,$bytes4write.Count)
+$uraw.Dispose()
