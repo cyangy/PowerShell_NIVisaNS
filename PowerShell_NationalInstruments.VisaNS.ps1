@@ -29,11 +29,11 @@ new-object [NationalInstruments.VisaNS]::MessageBasedSession
 #实际使用时直接使用实例，不要使用基类 MessageBasedSession  SerialSession
 #[NationalInstruments.VisaNS.MessageBasedSession] $mbs = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("ASRL1::INSTR")
 [NationalInstruments.VisaNS.SerialSession] $HP34401A_VinDDM = [NationalInstruments.VisaNS.ResourceManager]::GetLocalManager().Open("ASRL2::INSTR")
-$HP34401A_VinDDM.BaudRate             = 9600  #波特率
-$HP34401A_VinDDM.DataBits             = 8     #数据位
-$HP34401A_VinDDM.StopBits             = [NationalInstruments.VisaNS.StopBitType]10 #停止位 
-$HP34401A_VinDDM.Parity               = [NationalInstruments.VisaNS.Parity]0   #校验     NONE 0  Odd 1  Even 2 Mark 3 Space 4
-$HP34401A_VinDDM.FlowControl          = [NationalInstruments.VisaNS.FlowControlTypes]0 #Flow Control  NONE 0  XON/XOFF 1   //Flow Control  NONE 0  XON/XOFF 1   使用 NI I/O Trace 监视   VISA Test Panel 设置时得到
+$HP34401A_VinDDM.BaudRate             = 9600  #波特率 The baud rate of the interface. The default value is 9600 baud
+$HP34401A_VinDDM.DataBits             = 8     #数据位 Gets or sets the number of data bits (from 5 to 8) contained in each frame. The data bits for each frame are located in the low-order bits of every byte stored in memory. 
+$HP34401A_VinDDM.StopBits             = [NationalInstruments.VisaNS.StopBitType]::One #停止位  One  OneAndOneHalf Two
+$HP34401A_VinDDM.Parity               = [NationalInstruments.VisaNS.Parity]::None     #校验     NONE 0  Odd 1  Even 2 Mark 3 Space 4
+$HP34401A_VinDDM.FlowControl          = [NationalInstruments.VisaNS.FlowControlTypes]::None  #Flow Control  NONE 0  XON/XOFF 1 
 $HP34401A_VinDDM.TerminationCharacter = 0x0A #使用0x0A作为终止符
 $HP34401A_VinDDM.ReadTermination      = [NationalInstruments.VisaNS.SerialTerminationMethod]::TerminationCharacter; #读回结束符选择  #结束符选择 None 0   LastBit 1   TerminationCharacter 2   Break 3
                                          #VI_ATTR_ASRL_END_IN indicates the method used to terminate read operations
