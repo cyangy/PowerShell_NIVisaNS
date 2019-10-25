@@ -15,11 +15,15 @@ new-object [NationalInstruments.VisaNS]::MessageBasedSession
 #>
 #最好的加载方式,分别交换两行注释观察区别,不带 | Out-Null 或 $LoadNationalInstrumentsVisaNS =  时 [NationalInstruments.VisaNS.MessageBasedSession].BaseType 会输出更多更详细信息
 #$LoadNationalInstrumentsVisaNS = [System.Reflection.Assembly]::LoadFrom("D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.dll")
-[System.Reflection.Assembly]::LoadFrom("D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.dll") 
+[System.Reflection.Assembly]::LoadFrom("$PSScriptRoot\lib\NationalInstruments.VisaNS.Static.dll") 
 #Add-Type -Path "D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.Static.dll" #加载出错
 #$LoadNationalInstrumentsVisaNS = Add-Type -Path "D:\Data\Github\VISA_CLI\lib\NationalInstruments.VisaNS.dll" # Load the .Net library
- $env:PATH += ";D:\Data\Github\VISA_CLI\lib\"
- Clear-Host 
+ $env:PATH += ";$PSScriptRoot\lib\"
+#也可使用如下方式载入dll
+#https://stackoverflow.com/questions/12923074/how-to-load-assemblies-in-powershell/37468429#37468429
+ #$bytes = [System.IO.File]::ReadAllBytes("$PSScriptRoot\lib\NationalInstruments.VisaNS.Static.dll")
+ #[System.Reflection.Assembly]::Load($bytes)
+# Clear-Host 
 #dll中命名空间可以从 VisualStudio 对象浏览器中查看、复制
 #[NationalInstruments.VisaNS.MessageBasedSession].BaseType
 #实际使用时直接使用实例，不要使用基类 MessageBasedSession  SerialSession
